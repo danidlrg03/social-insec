@@ -32,9 +32,9 @@ def index():
     # ...
     if login_form.validate_on_submit() and login_form.submit.data:
         get_user = f"""
-        SELECT * FROM Users WHERE username = '{login_form.username.data}';
+        SELECT * FROM Users WHERE username = ?;
         """
-        user = sqlite.query(get_user, one=True)
+        user = sqlite.query(get_user, True, login_form.username.data)
         if user is None:
             flash("Sorry, this user does not exist!", category="warning")
         if not bcrypt.check_password_hash(user["password"], login_form.password.data):
